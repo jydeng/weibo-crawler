@@ -1,0 +1,21 @@
+{
+  "name": "weibo-crawler",
+  "version": "1.0.0",
+  "description": "crawler the weibo.",
+  "main": "index.js",
+  "scripts": {
+    "test": "crawler"
+  },
+  "keywords": [
+    "crawler"
+  ],
+  "author": "Roy",
+  "license": "MIT",
+  "dependencies": {
+    "guid": "0.0.12",
+    "moment": "^2.22.2",
+    "mysql": "^2.16.0",
+    "puppeteer": "^1.6.2",
+    "puppeteer-cn": "^0.1.7"
+  }
+}
