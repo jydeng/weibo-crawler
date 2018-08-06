@@ -6,22 +6,22 @@ const pool = mysql.createPool({
   password: 'password',
   database: 'crawler'
 });
-const query = function(sql, values) {
+
+let query = function(sql, values) {
   return new Promise((resolve, reject) => {
-    pool.getConnection((err, conn) => {
+    pool.getConnection(function(err, connection) {
       if (err) {
-        conn.release();
-        return reject(err);
+        reject(err);
+      } else {
+        connection.query(sql, values, (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+          connection.release();
+        });
       }
-      conn.query(sql, values, (err, rows) => {
-        if (err) {
-          conn.release();
-          reject(err);
-        } else {
-          resolve(rows);
-          conn.release();
-        }
-      });
     });
   });
 };

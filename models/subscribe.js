@@ -1,5 +1,5 @@
 const util = require('./util');
-const mysql = require('./db');
+const { query } = require('./db');
 
 /**
  * 新增订阅
@@ -8,7 +8,7 @@ const mysql = require('./db');
 async function addSubscribe(uid) {
   const sql = `INSERT INTO subscribe(id,uid,last_crawle_time,deleted) VALUES(?,?,?,0);`;
   const values = [util.guid(), uid, util.now()];
-  return await mysql.query(sql,values);
+  return await query(sql, values);
 }
 
 /**
@@ -21,7 +21,7 @@ async function addSubscribe(uid) {
 async function updateSubscribe(uid, title, url, feedtime) {
   const sql = `UPDATE subscribe SET last_title=?,last_url=?,last_feed_time=?, last_crawle_time=? WHERE uid=?;`;
   const values = [title, url, feedtime, utl.now(), uid];
-  return await mysql.query(sql,values);
+  return await query(sql, values);
 }
 
 /**
@@ -30,7 +30,7 @@ async function updateSubscribe(uid, title, url, feedtime) {
 async function selectSubscribe() {
   const sql = `SELECT id,uid,last_title,last_url,date_format(last_feed_time,'%Y-%m-%d %T') last_feed_time ,date_format(last_crawle_time,'%Y-%m-%d %T') last_crawle_time FROM subscribe where deleted = 0;`;
   const values = [];
-  return await mysql.query(sql,values);
+  return await query(sql, values);
 }
 
 module.exports = {
