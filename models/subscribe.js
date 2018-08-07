@@ -20,7 +20,7 @@ async function addSubscribe(uid) {
  */
 async function updateSubscribe(uid, title, url, feedtime) {
   const sql = `UPDATE subscribe SET last_title=?,last_url=?,last_feed_time=?, last_crawle_time=? WHERE uid=?;`;
-  const values = [title, url, feedtime, utl.now(), uid];
+  const values = [title, url, feedtime, util.now(), uid];
   return await query(sql, values);
 }
 

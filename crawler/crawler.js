@@ -71,7 +71,7 @@ async function crawleWeibo(subscribes) {
           item.feedtime = feedtime;
           subscribe.last_title = item.content;
           subscribe.last_url = item.url;
-          subscribe.last_feed_time = item.feedtime;
+          subscribe.last_feed_time = util.after(item.feedtime,subscribe.last_feed_time) ? item.feedtime : subscribe.last_feed_time;
           subscribe.rows.push(item);
         } else {
           break page;
@@ -80,6 +80,9 @@ async function crawleWeibo(subscribes) {
     }
   }
 
+  await page.close();
+  await browser.close();
+  
   return subscribes;
 }
 
