@@ -34,12 +34,14 @@ function procTime(str) {
   }
 
   if (currentYear) {
-    return `${moment().year()}-${arr[0].replace('月', '-').replace('日', '')} ${
-      arr[1]
-    }:00`;
+    return `${moment().year()}-${arr[0].replace('月', '-').replace('日', '')} ${arr[1]}:00`;
   }
 
   return `${arr[0]} ${arr[1]}`;
+}
+
+function after(a,b){
+  return moment(a,'YYYY-MM-DD HH:mm:ss').isAfter(b); 
 }
 
 module.exports = {
@@ -48,5 +50,6 @@ module.exports = {
   now: now,
   url: url,
   loginUrl: 'https://passport.weibo.cn/signin/login?entry=mweibo',
-  procTime: procTime
+  procTime: procTime,
+  after: after
 };

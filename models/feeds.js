@@ -1,5 +1,5 @@
-const util = require('./util');
-const mysql = require('./db');
+const util = require('../utils/util');
+const { query } = require('./db');
 
 /**
  * 写入博文
@@ -11,7 +11,7 @@ const mysql = require('./db');
 async function addFeeds(uid,content,url,feedtime){
   const sql = `INSERT INTO feeds(id,uid,content,url,feed_time) VALUES(?,?,?,?,?);`;
   const values = [util.guid(), uid, content, url, feedtime];
-  return await mysql.query(sql,values);
+  return await query(sql,values);
 }
 
 /**
@@ -21,7 +21,7 @@ async function addFeeds(uid,content,url,feedtime){
 async function selectFeeds(uid){
   const sql = `SELECT id,uid,content,url,date_format(feed_time,'%Y-%m-%d %T') feed_time FROM feeds where uid=?`;
   const values = [uid];
-  return await mysql.query(sql,values);
+  return await query(sql,values);
 }
 
 module.exports = {
