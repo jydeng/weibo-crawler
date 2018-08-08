@@ -31,6 +31,8 @@ function procTime(str) {
   let arr = pure.split(' ');
   let currentDay = ~pure.indexOf('今天');
   let currentYear = ~pure.indexOf('月') && ~pure.indexOf('日');
+  let latelyReg = /^(\d{1,2})\D*$/;
+  let lately = latelyReg.test(pure);
 
   if (currentDay) {
     return `${moment().format('YYYY-MM-DD')} ${arr[1]}:00`;
@@ -40,6 +42,10 @@ function procTime(str) {
     return `${moment().year()}-${arr[0].replace('月', '-').replace('日', '')} ${
       arr[1]
     }:00`;
+  }
+
+  if(lately){
+    return moment().subtract(latelyReg.exec(pure)[1],'minute').format('YYYY-MM-DD HH:mm:ss');
   }
 
   return `${arr[0]} ${arr[1]}`;

@@ -4,10 +4,8 @@ const feeds = require('./models/feeds');
 const { crawleWeibo } = require('./crawler/crawler');
 const schedule = require('node-schedule');
 
-const rule = new schedule.RecurrenceRule();
-rule.minute = 40;
-
-const job = schedule.scheduleJob(rule,main);
+//间隔5分钟执行一次任务
+const job = schedule.scheduleJob('0 */5 * * * *',main);
 
 async function main() {
   util.log(`开始执行爬虫任务。`);
