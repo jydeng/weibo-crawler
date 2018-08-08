@@ -1,5 +1,8 @@
 const guid = require('guid');
 const moment = require('moment');
+const logger = require('../logger');
+const infologger = logger.logger('default');
+const errlogger = logger.logger('error');
 
 function getGuid() {
   return guid.raw();
@@ -34,14 +37,27 @@ function procTime(str) {
   }
 
   if (currentYear) {
-    return `${moment().year()}-${arr[0].replace('月', '-').replace('日', '')} ${arr[1]}:00`;
+    return `${moment().year()}-${arr[0].replace('月', '-').replace('日', '')} ${
+      arr[1]
+    }:00`;
   }
 
   return `${arr[0]} ${arr[1]}`;
 }
 
-function after(a,b){
-  return moment(a,'YYYY-MM-DD HH:mm:ss').isAfter(b); 
+function after(a, b) {
+  return moment(a, 'YYYY-MM-DD HH:mm:ss').isAfter(b);
+}
+
+function log(msg, type = 'debug') {
+  switch (type) {
+    case 'error':
+      errlogger.error(msg);
+      break;
+    default:
+      infologger.info(msg);
+      break;
+  }
 }
 
 module.exports = {
@@ -51,5 +67,6 @@ module.exports = {
   url: url,
   loginUrl: 'https://passport.weibo.cn/signin/login?entry=mweibo',
   procTime: procTime,
-  after: after
+  after: after,
+  log: log
 };
