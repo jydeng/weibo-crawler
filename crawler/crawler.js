@@ -8,7 +8,7 @@ function getPageData() {
     let title = ele.querySelector('.ctt').innerText;
     let content = ele.querySelector('.ctt').innerHTML;
     let feedtime = ele.querySelector('.ct').innerHTML; 
-    let url =  ele.querySelector('.ct').href;
+    let url =  ele.querySelector('.cc').href;
     pageData.push({ title, content, feedtime, url });
   });
 
