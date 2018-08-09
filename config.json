@@ -7,8 +7,8 @@
     "database": "crawler"
   },
   "weiboAccount": {
-    "username": "529909869@qq.com",
-    "password": "love89757.wb"
+    "username": "",
+    "password": ""
   },
   "interval": "0 */10 * * * *",
   "inertvalDesc": "间隔10分钟执行一次"
