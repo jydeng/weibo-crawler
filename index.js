@@ -24,7 +24,9 @@ async function main() {
     if(result.rows.length){
       util.log(`微博: ${subscribe.uid} 自 ${subscribe.last_crawle_time} 后更新了${result.rows.length} 条微博。`);
 
-      await subscribes.updateSubscribe(result.uid,result.uname,result.last_title,result.last_url,result.last_feed_time);
+      const last = result.rows[0];
+      await subscribes.updateSubscribe(result.uid,result.uname,last.title,last.url,last.feedtime);
+
       for (let j = 0; j < result.rows.length; j++) {
         const feed = result.rows[j];
         await feeds.addFeeds(result.uid, feed.content, feed.url, feed.feedtime);
@@ -40,5 +42,6 @@ async function main() {
   util.log(`任务完成。`);
 }
 
+main();
 
 

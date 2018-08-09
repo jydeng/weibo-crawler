@@ -79,13 +79,6 @@ async function crawleWeibo(subscribe) {
         //若微博发布时间晚于最后抓取时间则需要入库，
         if (util.after(feedtime, subscribe.last_crawle_time)) {
           item.feedtime = feedtime;
-          subscribe.last_title = item.title;
-          subscribe.last_url = item.url;
-          subscribe.last_feed_time = subscribe.last_feed_time
-            ? util.after(item.feedtime, subscribe.last_feed_time)
-              ? item.feedtime
-              : subscribe.last_feed_time
-            : item.feedtime;
           subscribe.rows.push(item);
         } else {
           //抓取到的数据是按照时间逆序，遇到一条不符合条件则后续的均不符合,直接跳出循环
