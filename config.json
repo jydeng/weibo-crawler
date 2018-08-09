@@ -11,5 +11,5 @@
     "password": "love89757.wb"
   },
   "interval": "0 */10 * * * *",
-  "inertvalDesc": "间隔10分钟执行一次"
+  "intervalDesc": "间隔10分钟执行一次任务"
 }

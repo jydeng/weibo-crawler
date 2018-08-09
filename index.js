@@ -3,6 +3,7 @@ const subscribes = require('./models/subscribe');
 const feeds = require('./models/feeds');
 const { crawleWeibo } = require('./crawler/crawler');
 const interval = require('./config.json').interval;
+const intervalDesc = require('./config.json').intervalDesc;
 const schedule = require('node-schedule');
 
 const job = schedule.scheduleJob(interval,main);
@@ -42,6 +43,5 @@ async function main() {
   util.log(`任务完成。`);
 }
 
-main();
-
+util.log(`启动成功,${intervalDesc}。`);
 
