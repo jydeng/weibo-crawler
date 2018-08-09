@@ -3,24 +3,15 @@ const puppeteer = require('puppeteer-cn');
 const weiboAccount = require('../config.json').weiboAccount;
 
 function getPageData() {
-  let $ = window.$;
   let pageData = [];
-
-  $('.c[id]').each((index, item) => {
-    let $item = $(item);
-    let title = $item
-      .find('.ctt')
-      .text()
-      .replace('🖤', '');
-    let content = $item
-      .find('.ctt')
-      .html()
-      .replace('🖤', '');
-    let feedtime = $item.find('.ct').html();
-    let url = $item.find('.cc').attr('href');
-
+  document.querySelectorAll('.c[id]').forEach(ele => {
+    let title = ele.querySelector('.ctt').innerText;
+    let content = ele.querySelector('.ctt').innerHTML;
+    let feedtime = ele.querySelector('.ct').innerHTML; 
+    let url =  ele.querySelector('.ct').href;
     pageData.push({ title, content, feedtime, url });
   });
+
   return pageData;
 }
 
@@ -57,11 +48,6 @@ async function crawleWeibo(subscribe) {
     //等待页面加载完毕
     await page.waitFor('[name="mp"]');
 
-    //注入jQuery脚本
-    await page.addScriptTag({
-      url: 'https://cdn.bootcss.com/jquery/1.3.0/jquery.min.js'
-    });
-
     //获取总页数
     const totalPage = await page.$eval('[name="mp"]', ele => {
       return parseInt(ele.value);
@@ -80,11 +66,6 @@ async function crawleWeibo(subscribe) {
 
         //等待页面加载完毕
         await page.waitFor('[name="mp"]');
-
-        //注入jQuery脚本
-        await page.addScriptTag({
-          url: 'https://cdn.bootcss.com/jquery/1.3.0/jquery.min.js'
-        });
       }
 
       //获取页面中的数据
