@@ -4,7 +4,7 @@
   "description": "crawler the weibo.",
   "main": "index.js",
   "scripts": {
-    "test": "crawler"
+    "start": "node ./index.js"
   },
   "keywords": [
     "crawler"

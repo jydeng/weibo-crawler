@@ -1,12 +1,6 @@
-const util = require('../utils/util');
 const mysql = require('mysql');
-const pool = mysql.createPool({
-  host: 'localhost',
-  port: '3306',
-  user: 'root',
-  password: 'password',
-  database: 'crawler'
-});
+const connection = require('../config.json').connection;
+const pool = mysql.createPool(connection);
 
 let query = function(sql, values) {
   return new Promise((resolve, reject) => {

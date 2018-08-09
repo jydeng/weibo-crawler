@@ -1,41 +1,44 @@
 const util = require('./utils/util');
-const subscribe = require('./models/subscribe');
+const subscribes = require('./models/subscribe');
 const feeds = require('./models/feeds');
 const { crawleWeibo } = require('./crawler/crawler');
+const interval = require('./config.json').interval;
 const schedule = require('node-schedule');
 
-//间隔5分钟执行一次任务
-const job = schedule.scheduleJob('0 */5 * * * *',main);
+const job = schedule.scheduleJob(interval,main);
 
 async function main() {
-  util.log(`开始执行爬虫任务。`);
+  util.log(`开始任务。`);
 
-  const allSubscribe = await subscribe.selectSubscribe();
-  util.log(`查询订阅情况:${allSubscribe.length}个订阅。`);
+  const allSubscribe = await subscribes.selectSubscribe();
+  util.log(`一共订阅了 ${allSubscribe.length} 个微博。`);
 
-  util.log(`开始爬取数据。`);
+  for (let i = 0; i < allSubscribe.length; i++) {
+    const subscribe = allSubscribe[i];
+    subscribe.rows = [];
 
-  const result = await crawleWeibo(allSubscribe);
-  util.log(`爬取数据完成。`);
+    util.log(`微博: ${subscribe.uid} 开始爬取。`);
 
-  util.log(`开始写入数据。`);
-  for (let i = 0; i < result.length; i++) {
-    const item = result[i];
-    if (item.rows.length) {
-      util.log(`uid:[${item.uid}]微博有更新，写入新微博${item.rows.length}条。`);
-      await subscribe.updateSubscribe(item.uid,item.last_title,item.last_url,item.last_feed_time);
-      for (let j = 0; j < item.rows.length; j++) {
-        const feed = item.rows[j];
-        await feeds.addFeeds(item.uid, feed.content, feed.url, feed.feedtime);
+    const result = await crawleWeibo(subscribe);
+
+    if(result.rows.length){
+      util.log(`微博: ${subscribe.uid} 自 ${subscribe.last_crawle_time} 后更新了${result.rows.length} 条微博。`);
+
+      await subscribes.updateSubscribe(result.uid,result.uname,result.last_title,result.last_url,result.last_feed_time);
+      for (let j = 0; j < result.rows.length; j++) {
+        const feed = result.rows[j];
+        await feeds.addFeeds(result.uid, feed.content, feed.url, feed.feedtime);
       }
-      util.log(`uid:[${item.uid}]写入完成。`);
+
+      util.log(`微博: ${subscribe.uid} 任务完成。`);
+
     }else{
-      util.log(`${item.uid}微博没有更新。`);
+      util.log(`微博:${subscribe.uid} 自 ${subscribe.last_crawle_time} 后没有更新。`);
     }
   }
-  util.log(`任务执行完毕。`);
+
+  util.log(`任务完成。`);
 }
 
-main();
 
 

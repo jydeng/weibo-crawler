@@ -1,0 +1,15 @@
+{
+  "connection": {
+    "host": "localhost",
+    "port": "3306",
+    "user": "root",
+    "password": "password",
+    "database": "crawler"
+  },
+  "weiboAccount": {
+    "username": "529909869@qq.com",
+    "password": "love89757.wb"
+  },
+  "interval": "0 */10 * * * *",
+  "inertvalDesc": "间隔10分钟执行一次"
+}
