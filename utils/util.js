@@ -13,7 +13,11 @@ function now() {
 }
 
 function url(uid, page) {
-  return `https://weibo.cn/u/${uid}?filter=1&page=${page}`;
+  if (/^\d*$/.test(uid)) {
+    return `https://weibo.cn/u/${uid}?filter=1&page=${page}`;
+  } else {
+    return `https://weibo.cn/${uid}?filter=1&page=${page}`;
+  }
 }
 
 function sleep(time) {
@@ -44,8 +48,10 @@ function procTime(str) {
     }:00`;
   }
 
-  if(lately){
-    return moment().subtract(latelyReg.exec(arr[0])[1],'minute').format('YYYY-MM-DD HH:mm:ss');
+  if (lately) {
+    return moment()
+      .subtract(latelyReg.exec(arr[0])[1], 'minute')
+      .format('YYYY-MM-DD HH:mm:ss');
   }
 
   return `${arr[0]} ${arr[1]}`;
