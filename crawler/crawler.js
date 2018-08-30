@@ -18,7 +18,7 @@ function getPageData() {
 }
 
 async function initBroswer() {
-  browser = await puppeteer.launch({ headless: false });
+  browser = await puppeteer.launch({ headless: true });
   page = await browser.newPage();
 }
 
