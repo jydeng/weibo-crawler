@@ -1,24 +1,28 @@
 const util = require('../utils/util');
 const puppeteer = require('puppeteer-cn');
 const weiboAccount = require('../config.json').weiboAccount;
+let browser = null;
+let page = null;
 
 function getPageData() {
   let pageData = [];
   document.querySelectorAll('.c[id]').forEach(ele => {
     let title = ele.querySelector('.ctt').innerText;
     let content = ele.querySelector('.ctt').innerHTML;
-    let feedtime = ele.querySelector('.ct').innerHTML; 
-    let url =  ele.querySelector('.cc').href;
+    let feedtime = ele.querySelector('.ct').innerHTML;
+    let url = ele.querySelector('.cc').href;
     pageData.push({ title, content, feedtime, url });
   });
 
   return pageData;
 }
 
-async function crawleWeibo(subscribe) {
-  const browser = await puppeteer.launch({ headless: true });
-  const page = await browser.newPage();
+async function initBroswer() {
+  browser = await puppeteer.launch({ headless: false });
+  page = await browser.newPage();
+}
 
+async function loginWeibo() {
   try {
     await page.goto(util.loginUrl, { waitUntil: 'networkidle2' });
 
@@ -41,7 +45,19 @@ async function crawleWeibo(subscribe) {
 
     //等发微博框出现表示登录成功
     await page.waitFor('.m-text-cut');
+  } catch (error) {
+    util.log(error.toString(), 'error');
+    return subscribe;
+  }
+}
 
+async function closeBroswer() {
+  await page.close();
+  await browser.close();
+}
+
+async function crawleWeibo(subscribe) {
+  try {
     //跳转到指定的微博页
     await page.goto(util.url(subscribe.uid, 1), { waitUntil: 'networkidle2' });
 
@@ -90,13 +106,12 @@ async function crawleWeibo(subscribe) {
     util.log(error.toString(), 'error');
     return subscribe;
   }
-
-  await page.close();
-  await browser.close();
-
   return subscribe;
 }
 
 module.exports = {
-  crawleWeibo: crawleWeibo
+  initBroswer: initBroswer,
+  loginWeibo: loginWeibo,
+  crawleWeibo: crawleWeibo,
+  closeBroswer: closeBroswer
 };

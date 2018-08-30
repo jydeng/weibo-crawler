@@ -1,7 +1,7 @@
 const util = require('./utils/util');
 const subscribes = require('./models/subscribe');
 const feeds = require('./models/feeds');
-const { crawleWeibo } = require('./crawler/crawler');
+const { initBroswer,loginWeibo,crawleWeibo,closeBroswer } = require('./crawler/crawler');
 const interval = require('./config.json').interval;
 const intervalDesc = require('./config.json').intervalDesc;
 const schedule = require('node-schedule');
@@ -14,7 +14,12 @@ async function main() {
   const allSubscribe = await subscribes.selectSubscribe();
   util.log(`一共订阅了 ${allSubscribe.length} 个微博。`);
 
+  await initBroswer();
+  
+  await loginWeibo();
+
   for (let i = 0; i < allSubscribe.length; i++) {
+
     const subscribe = allSubscribe[i];
     subscribe.rows = [];
 
@@ -36,9 +41,11 @@ async function main() {
       util.log(`微博: ${subscribe.uid} 任务完成。`);
 
     }else{
-      util.log(`微博:${subscribe.uid} 自 ${subscribe.last_crawle_time} 后没有更新。`);
+      util.log(`微博:${subscribe.uname }自${subscribe.last_crawle_time} 后没有更新。`);
     }
   }
+
+  await closeBroswer();
 
   util.log(`任务完成。`);
 }
