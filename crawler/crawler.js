@@ -1,16 +1,16 @@
-const util = require('../utils/util');
-const puppeteer = require('puppeteer-cn');
-const weiboAccount = require('../config.json').weiboAccount;
+const util = require("../utils/util");
+const puppeteer = require("puppeteer");
+const weiboAccount = require("../config.json").weiboAccount;
 let browser = null;
 let page = null;
 
 function getPageData() {
   let pageData = [];
-  document.querySelectorAll('.c[id]').forEach(ele => {
-    let title = ele.querySelector('.ctt').innerText;
-    let content = ele.querySelector('.ctt').innerHTML;
-    let feedtime = ele.querySelector('.ct').innerHTML;
-    let url = ele.querySelector('.cc').href;
+  document.querySelectorAll(".c[id]").forEach(ele => {
+    let title = ele.querySelector(".ctt").innerText;
+    let content = ele.querySelector(".ctt").innerHTML;
+    let feedtime = ele.querySelector(".ct").innerHTML;
+    let url = ele.querySelector(".cc").href;
     pageData.push({ title, content, feedtime, url });
   });
 
@@ -24,29 +24,29 @@ async function initBroswer() {
 
 async function loginWeibo() {
   try {
-    await page.goto(util.loginUrl, { waitUntil: 'networkidle2' });
+    await page.goto(util.loginUrl, { waitUntil: "networkidle2" });
 
     //模拟登录
     await page.$eval(
-      '#loginName',
+      "#loginName",
       (ele, username) => {
         ele.value = username;
       },
       weiboAccount.username
     );
     await page.$eval(
-      '#loginPassword',
+      "#loginPassword",
       (ele, password) => {
         ele.value = password;
       },
       weiboAccount.password
     );
-    await page.keyboard.press('Enter');
+    await page.keyboard.press("Enter");
 
     //等发微博框出现表示登录成功
-    await page.waitFor('.m-text-cut');
+    await page.waitFor(".m-text-cut");
   } catch (error) {
-    util.log(error.toString(), 'error');
+    util.log(error.toString(), "error");
     return subscribe;
   }
 }
@@ -59,7 +59,7 @@ async function closeBroswer() {
 async function crawleWeibo(subscribe) {
   try {
     //跳转到指定的微博页
-    await page.goto(util.url(subscribe.uid, 1), { waitUntil: 'networkidle2' });
+    await page.goto(util.url(subscribe.uid, 1), { waitUntil: "networkidle2" });
 
     //等待页面加载完毕
     await page.waitFor('[name="mp"]');
@@ -77,7 +77,7 @@ async function crawleWeibo(subscribe) {
       if (j > 1) {
         //跳转到指定的微博页
         await page.goto(util.url(subscribe.uid, j), {
-          waitUntil: 'networkidle2'
+          waitUntil: "networkidle2"
         });
 
         //等待页面加载完毕
@@ -103,7 +103,7 @@ async function crawleWeibo(subscribe) {
       }
     }
   } catch (error) {
-    util.log(error.toString(), 'error');
+    util.log(error.toString(), "error");
     return subscribe;
   }
   return subscribe;
